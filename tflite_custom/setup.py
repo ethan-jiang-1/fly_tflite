@@ -24,10 +24,8 @@ import os
 
 from setuptools import find_packages
 from setuptools import setup
-#PACKAGE_NAME = os.environ['PROJECT_NAME']
-#PACKAGE_VERSION = os.environ['PACKAGE_VERSION']
-PACKAGE_NAME = "tflite-custom"
-PACKAGE_VERSION = "0.0.1"
+PACKAGE_NAME = os.environ['PROJECT_NAME']
+PACKAGE_VERSION = os.environ['PACKAGE_VERSION']
 DOCLINES = __doc__.split('\n')
 
 setup(
