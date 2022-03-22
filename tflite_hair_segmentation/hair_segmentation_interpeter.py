@@ -3,6 +3,7 @@ import cv2 as cv2
 import numpy as np
 import tflite_runtime.interpreter as tflite
 import matplotlib.pyplot as plt
+from datetime import datetime 
 
 HSI_IMG_SIZE = 512
 
@@ -70,9 +71,11 @@ class HairSegmentationInterpreter(object):
     def process_img512(self, img_cv512):
         #if self.debug:
         #    self._debug_img(img_cv512)
+
         if img_cv512.shape[0] != HSI_IMG_SIZE and img_cv512.shape[1] != HSI_IMG_SIZE and img_cv512.shape[2] != 3:
             raise ValueError("expecting (512, 512, 3) instead of {}".format(img_cv512))
 
+        d0 = datetime.now()
         img_cv512 = img_cv512 / 256
 
         img_tfl512 = np.zeros((1, HSI_IMG_SIZE, HSI_IMG_SIZE, 4), dtype=np.float32)    
@@ -94,6 +97,9 @@ class HairSegmentationInterpreter(object):
         mask_black = result_masks[0, :, :, 0]
         mask_white = result_masks[0, :, :, 1]
 
+        d1 = datetime.now()
+        dt = d1 - d0
+        print("inference time: {:.3f}sec".format(dt.total_seconds()))
         if self.debug:
             self._debug_imgs(img_cv512, mask_black, mask_white)
 
@@ -120,8 +126,8 @@ def do_validate():
 
 def do_process_reseved_img():
     #img_pathname = os.sep.join([_get_parent_dir(), "_reserved_imgs", "c1.png"])
-    #img_pathname = os.sep.join([_get_parent_dir(), "_reserved_imgs", "c2.jpg"])
-    img_pathname = os.sep.join([_get_parent_dir(), "_reserved_imgs", "c3.png"])
+    img_pathname = os.sep.join([_get_parent_dir(), "_reserved_imgs", "c2.jpg"])
+    #img_pathname = os.sep.join([_get_parent_dir(), "_reserved_imgs", "c3.png"])
 
     if not os.path.isfile(img_pathname):
         raise ValueError("{} not exist".format(img_pathname))
